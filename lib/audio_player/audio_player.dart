@@ -226,58 +226,62 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
 
   songLyric(Size size) {
     return Expanded(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            width: size.width,
-            //height: size.height * .1,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-              color: Color(0xFF302F42),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        padding: const EdgeInsets.all(9),
+        width: size.width,
+        //height: size.height * .1,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+          color: Color(0xFF302F42),
+        ),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text(
+                  "Lyrics",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Lyrics",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.open_in_new_rounded),
-                        Icon(Icons.open_in_full_rounded),
-                      ],
-                    ),
+                    Icon(Icons.open_in_new_rounded, color: Colors.white),
+                    Icon(Icons.open_in_full_rounded, color: Colors.white),
                   ],
-                ),
-                Text(
-                  "But in the end",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Text(
-                  "it doesn't even matter.",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
                 ),
               ],
             ),
-          ),
-        ],
+            Text(
+              "I tried so hard and got so far",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Text(
+              "But in the end",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Text(
+              "it doesn't even matter.",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
