@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/audio_player/audio_player.dart';
 import 'package:my_first_app/entrada_de_datos/in_datos.dart';
 import 'package:my_first_app/galeria_imagenes/galeria_imagenes.dart';
 import 'package:my_first_app/gestor-habitos/home-hab.dart';
@@ -47,7 +48,14 @@ class Menu extends StatelessWidget {
               child: const Text("Galería de imágenes"),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AudioPlayerPage(),
+                  ),
+                );
+              },
               child: const Text("Reproductor de audio"),
             ),
             ElevatedButton(
