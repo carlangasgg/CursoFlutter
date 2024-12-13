@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 class AudioPlayerPage extends StatefulWidget {
   const AudioPlayerPage({super.key});
@@ -8,9 +9,45 @@ class AudioPlayerPage extends StatefulWidget {
 }
 
 class _AudioPlayerPageState extends State<AudioPlayerPage> {
+  late AudioPlayer player;
+  Duration? _totalDuration = const Duration(seconds: 0);
+  Duration _currentPosition = Duration.zero;
+  double lyricsHeight = 160;
+  bool isExpandedLyrics = false;
+
   @override
   void initState() {
     super.initState();
+    player = AudioPlayer();
+    player.setAsset('assets/mp3/in_the_end.mp3');
+
+    player.durationStream.listen((duration) {
+      setState(() {
+        _totalDuration = duration;
+      });
+    });
+
+    player.positionStream.listen((position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    return "$minutes:${seconds.toString().padLeft(2, "0")}";
+  }
+
+  double _calculatePercentage() {
+    if (_totalDuration == null || _totalDuration!.inMilliseconds == 0) {
+      return 0.0;
+    }
+    return ((_currentPosition.inMilliseconds / _totalDuration!.inMilliseconds) *
+            100) /
+        100;
   }
 
   @override
@@ -19,6 +56,12 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
 
     double imgHeight = size.height * .45;
 
+    double appBarPosition = size.height * .07;
+    double imgPosition = size.height * .15;
+    double controlsPosition = size.height * .22;
+
+    Duration animationDuration = const Duration(milliseconds: 200);
+
     return Scaffold(
       backgroundColor: const Color(0xFF13122B),
       body: Padding(
@@ -26,54 +69,129 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
           left: 16,
           right: 16,
         ),
-        child: Column(
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
+            Positioned(
+              top: appBarPosition,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const Text(
-                  "Recently Played",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                  const Text(
+                    "Recently Played",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    color: Colors.white,
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.more_horiz,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            Container(
-              width: size.width,
-              height: imgHeight,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: AssetImage("assets/img/lp.jpeg"),
-                  fit: BoxFit.cover,
+            Positioned(
+              left: 0,
+              right: 0,
+              top: imgPosition,
+              child: Container(
+                width: size.width,
+                height: imgHeight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  image: const DecorationImage(
+                    image: AssetImage("assets/img/lp.jpeg"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 15),
-            songInfo(),
-            audioControls(size),
-            songLyric(size),
+            // songInfo(),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: controlsPosition,
+              child: audioControls(size),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedContainer(
+                duration: animationDuration,
+                curve: Curves.easeIn,
+                height: lyricsHeight,
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF302F42),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Lyrics",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isExpandedLyrics = !isExpandedLyrics;
+                              lyricsHeight = isExpandedLyrics ? 500 : 130;
+                            });
+                          },
+                          icon: Icon(
+                            isExpandedLyrics
+                                ? Icons.close_fullscreen_outlined
+                                : Icons.open_in_full_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      "I tried so hard and got so far",
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                    const Text(
+                      "But in the end, it doesn't even matter",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -81,11 +199,13 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
   }
 
   songInfo() {
-    return Container();
+    return Container(
+      height: 40,
+    );
   }
 
   audioControls(Size size) {
-    double percentage = size.width * .4;
+    double percentage = size.width * _calculatePercentage();
 
     timeSlider() {
       return SizedBox(
@@ -127,162 +247,78 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
       children: [
         Column(
           children: [
+            timeSlider(),
+            //Minutos
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "In the end",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      "Linkin Park",
-                      style: TextStyle(
-                        color: Colors.white38,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.favorite_border,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            timeSlider(),
-            const SizedBox(
-              height: 5,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
                 Text(
-                  "0:00",
-                  style: TextStyle(
+                  _formatDuration(_currentPosition),
+                  style: const TextStyle(
                     color: Colors.white,
+                    fontSize: 12,
                   ),
                 ),
                 Text(
-                  "3:39",
-                  style: TextStyle(
+                  _formatDuration(_totalDuration!),
+                  style: const TextStyle(
                     color: Colors.white,
+                    fontSize: 12,
                   ),
                 ),
               ],
             ),
-            //Minutos
           ],
         ),
+        //Controles
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.shuffle, color: Colors.white),
+            const Icon(
+              Icons.shuffle,
+              color: Colors.white,
+              size: 28,
             ),
-            IconButton(
-              onPressed: () {},
-              icon:
-                  const Icon(Icons.skip_previous_rounded, color: Colors.white),
+            const Icon(
+              Icons.skip_previous_rounded,
+              color: Colors.white,
+              size: 28,
             ),
             Container(
-              width: 40,
-              height: 40,
+              width: 60,
+              height: 60,
               decoration: const BoxDecoration(
                 color: Color(0xFF643CEB),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
+                onPressed: () {
+                  if (player.playing) {
+                    player.pause();
+                  } else {
+                    player.play();
+                  }
+                },
+                icon: Icon(
+                  player.playing ? Icons.pause : Icons.play_arrow_rounded,
+                  color: Colors.white,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.skip_next_rounded, color: Colors.white),
+            const Icon(
+              Icons.skip_next_rounded,
+              color: Colors.white,
+              size: 28,
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.repeat_rounded, color: Colors.white),
+            const Icon(
+              Icons.repeat,
+              color: Colors.white,
+              size: 28,
             ),
           ],
         ),
       ],
-    );
-  }
-
-  songLyric(Size size) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(9),
-        width: size.width,
-        //height: size.height * .1,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-          color: Color(0xFF302F42),
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Lyrics",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.open_in_new_rounded, color: Colors.white),
-                    Icon(Icons.open_in_full_rounded, color: Colors.white),
-                  ],
-                ),
-              ],
-            ),
-            Text(
-              "I tried so hard and got so far",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            Text(
-              "But in the end",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            Text(
-              "it doesn't even matter.",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
