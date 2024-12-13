@@ -6,15 +6,17 @@ class AudioPlayer2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double heightAppBar = size.height * .15;
-    double heightAlbum = size.height * .70;
-    double heightContinue = size.height * .15;
+    double heightAppBar = size.height * .1;
+    double heightAlbum = size.height * .7;
+    double heightNavMenu = size.height * .1;
+    double heightContinueWatching = size.height * .1;
     return Scaffold(
       body: Column(
         children: [
           AppBarPlayer(height: heightAppBar),
           AlbumPlayer(height: heightAlbum),
-          ContinueWatching(height: heightContinue),
+          ContinueWatching(height: heightContinueWatching),
+          NavMenu(height: heightNavMenu),
         ],
       ),
     );
@@ -27,10 +29,31 @@ class AppBarPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
       height: height,
-      color: Colors.yellow,
+      color: Colors.black,
+      child: Row(
+        children: [
+          Container(
+            width: size.width * .15,
+            color: Colors.white,
+          ),
+          Container(
+            width: size.width * .55,
+            color: Colors.lightBlue,
+          ),
+          Container(
+            width: size.width * .15,
+            color: Colors.white,
+          ),
+          Container(
+            width: size.width * .15,
+            color: Colors.lightBlue,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -167,15 +190,236 @@ class AlbumPlayer extends StatelessWidget {
 }
 
 class ContinueWatching extends StatelessWidget {
-  final double height;
+  final dynamic height;
+
   const ContinueWatching({super.key, required this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       height: height,
+    );
+  }
+}
+
+class NavMenu extends StatefulWidget {
+  final double height;
+  const NavMenu({super.key, required this.height});
+
+  @override
+  State<NavMenu> createState() => _NavMenuState();
+}
+
+class _NavMenuState extends State<NavMenu> {
+  int currentPage = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      width: double.infinity,
+      height: widget.height,
       color: Colors.lightGreen,
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              Container(
+                width: size.width * .25,
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          currentPage = 0;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.home_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 3,
+                left: 10,
+                right: 10,
+                child: Container(
+                  width: size.width,
+                  height: 3,
+                  color: currentPage == 0 ? Colors.red : Colors.black,
+                ),
+              ),
+              const Positioned(
+                bottom: 3,
+                left: 0,
+                right: 0,
+                child: Text(
+                  "Home",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Stack(
+            children: [
+              Container(
+                width: size.width * .25,
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          currentPage = 1;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.star_outline_rounded,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 3,
+                left: 10,
+                right: 10,
+                child: Container(
+                  width: size.width,
+                  height: 3,
+                  color: currentPage == 1 ? Colors.red : Colors.black,
+                ),
+              ),
+              const Positioned(
+                bottom: 3,
+                left: 0,
+                right: 0,
+                child: Text(
+                  "New",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Stack(
+            children: [
+              Container(
+                width: size.width * .25,
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          currentPage = 2;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.bookmark_border,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 3,
+                left: 10,
+                right: 10,
+                child: Container(
+                  width: size.width,
+                  height: 3,
+                  color: currentPage == 2 ? Colors.red : Colors.black,
+                ),
+              ),
+              const Positioned(
+                bottom: 3,
+                left: 0,
+                right: 0,
+                child: Text(
+                  "List",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Stack(
+            children: [
+              Container(
+                width: size.width * .25,
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          currentPage = 3;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.sim_card_download_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 3,
+                left: 10,
+                right: 10,
+                child: Container(
+                  width: size.width,
+                  height: 3,
+                  color: currentPage == 3 ? Colors.red : Colors.black,
+                ),
+              ),
+              const Positioned(
+                bottom: 3,
+                left: 0,
+                right: 0,
+                child: Text(
+                  "Download",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
