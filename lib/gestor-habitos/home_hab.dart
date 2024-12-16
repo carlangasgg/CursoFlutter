@@ -53,9 +53,6 @@ class _HomeHabitosPageState extends State<HomeHabitosPage> {
         ),
       );
     });
-    print(
-      habits.toList(),
-    );
   }
 
   void changeStatus(int index) {

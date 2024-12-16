@@ -3,7 +3,8 @@ import 'package:my_first_app/audio_player/audio_player.dart';
 import 'package:my_first_app/audio_player/audio_player_2.dart';
 import 'package:my_first_app/entrada_de_datos/in_datos.dart';
 import 'package:my_first_app/galeria_imagenes/galeria_imagenes.dart';
-import 'package:my_first_app/gestor-habitos/home-hab.dart';
+import 'package:my_first_app/gestor-habitos/home_hab.dart';
+import 'package:my_first_app/todo_provider/todo_provider.dart';
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
@@ -42,7 +43,7 @@ class Menu extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => GaleriaImagenesPage(),
+                    builder: (context) => const GaleriaImagenesPage(),
                   ),
                 );
               },
@@ -71,7 +72,14 @@ class Menu extends StatelessWidget {
               child: const Text("Reproductor de audio2"),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TodoProvider(),
+                  ),
+                );
+              },
               child: const Text("Todo - Provider"),
             ),
             ElevatedButton(

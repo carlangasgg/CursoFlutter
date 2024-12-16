@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GaleriaImagenesPage extends StatefulWidget {
-  GaleriaImagenesPage({super.key});
+  const GaleriaImagenesPage({super.key});
 
   @override
   State<GaleriaImagenesPage> createState() => _GaleriaImagenesPageState();
@@ -22,8 +22,6 @@ class _GaleriaImagenesPageState extends State<GaleriaImagenesPage> {
     setState(() {
       int lastIndex = int.parse(imgUrls.last.split("/")[4]);
       imgUrls.add("https://picsum.photos/200/${lastIndex + 1}");
-      print("Lenght: ");
-      print(imgUrls.length);
     });
   }
 
