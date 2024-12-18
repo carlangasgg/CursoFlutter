@@ -7,11 +7,14 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TaskProvider(),
-      child: const MaterialApp(
-        home: Menu(),
-      ),
+    const MaterialApp(
+      home: Menu(),
     ),
-  );
+    //ChangeNotifierProvider(
+    //  create: (_) => TaskProvider(),
+    //  child: const MaterialApp(
+    //    home: Menu(),
+    //  ),
+    //),
+  ); //
 }

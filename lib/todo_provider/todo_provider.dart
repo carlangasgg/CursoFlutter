@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/class/task.dart';
 import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier {
-  List<Task> _tasks = [];
+  final List<Task> _tasks = [];
   int counter = 0;
 
   addTask(String title) {
@@ -16,13 +17,6 @@ class TaskProvider extends ChangeNotifier {
     _tasks[index].isCompleted = !_tasks[index].isCompleted;
     notifyListeners();
   }
-}
-
-class Task {
-  String title;
-  bool isCompleted;
-
-  Task({required this.title, this.isCompleted = false});
 }
 
 class TodoProvider extends StatelessWidget {
