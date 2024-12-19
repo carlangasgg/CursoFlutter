@@ -17,7 +17,7 @@ class AnimalModel {
     this.isFavorite = false,
   });
 
-  AnimalModel copyWith(bool? isFavorite) {
+  AnimalModel copyWith({bool? isFavorite}) {
     return AnimalModel(
       id: id,
       name: name,

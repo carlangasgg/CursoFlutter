@@ -9,6 +9,8 @@ sealed class AnimalEvent extends Equatable {
 
 class LoadAnimals extends AnimalEvent {}
 
+class LoadFavoriteAnimals extends AnimalEvent {}
+
 class ToggleFavorite extends AnimalEvent {
   final String animalId;
   const ToggleFavorite(this.animalId);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:my_first_app/adopt_app/bloc/animal_bloc.dart';
+import 'package:my_first_app/adopt_app/favorite_page.dart';
 import 'package:my_first_app/adopt_app/widgets/adopt_bar_widget.dart';
 import 'package:my_first_app/adopt_app/widgets/adopt_filter_widget.dart';
 import 'package:my_first_app/adopt_app/widgets/adopt_list_widget.dart';
@@ -10,8 +12,8 @@ class AdoptAppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AnimalBloc()..add(LoadAnimals()),
+    return BlocProvider.value(
+      value: context.read<AnimalBloc>()..add(LoadAnimals()),
       child: const Body(),
     );
   }
@@ -32,14 +34,25 @@ class Body extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FavoritePage(),
+              ),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline_rounded),
-            label: "Favs",
+            icon: Icon(Icons.favorite_rounded),
+            label: "Favoritos",
           ),
         ],
       ),
@@ -47,8 +60,13 @@ class Body extends StatelessWidget {
   }
 }
 
+class AdoptAppBarWidget {
+  const AdoptAppBarWidget();
+}
+
+
 // backgroudColor: #DBE8DF
 // orange: #EE6D2D
-// brown: #3C2F20
-// brownLight: #8E8E81
+// brow: #3C2F20
+// browLight: #8E8E81
 // blueLight: #91C9B9
